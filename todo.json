@@ -1,0 +1,74 @@
+{
+  "project": "AICI Challenge - Hybrid RAG PDF Chat System",
+  "techStack": {
+    "frontend": "TanStack Start + React",
+    "backend": "TanStack Start (Nitro server functions)",
+    "database": "PostgreSQL + Drizzle ORM",
+    "vectorDB": "ChromaDB (local, easy setup)",
+    "ai": "AI SDK (Vercel) + OpenAI/Anthropic",
+    "containerization": "Docker + Docker Compose"
+  },
+  "tasks": [
+    {
+      "id": 1,
+      "category": "Backend",
+      "task": "Remove the 200-character truncation from sources in ai.ts - return full chunk content instead of sliced preview",
+      "file": "src/lib/ai.ts",
+      "done": true
+    },
+    {
+      "id": 2,
+      "category": "Backend",
+      "task": "Include pageNumber metadata in source response (already stored in ChromaDB metadata)",
+      "file": "src/lib/ai.ts",
+      "done": true
+    },
+    {
+      "id": 3,
+      "category": "Types",
+      "task": "Update Source interface to include full content, pageNumber, and chunkIndex fields",
+      "file": "src/types/api.ts",
+      "done": true
+    },
+    {
+      "id": 4,
+      "category": "UI/UX",
+      "task": "Redesign sources display: show full text block in collapsible/expandable accordion component",
+      "file": "src/components/chat/MessageList.tsx",
+      "done": true
+    },
+    {
+      "id": 5,
+      "category": "UI/UX",
+      "task": "Add page number and chunk index display to source citations (e.g., 'document.pdf - Page 3')",
+      "file": "src/components/chat/MessageList.tsx",
+      "done": true
+    },
+    {
+      "id": 6,
+      "category": "UI/UX",
+      "task": "Style source text blocks with proper formatting, scrollable container for long content",
+      "file": "src/components/chat/MessageList.tsx",
+      "done": true
+    },
+    {
+      "id": 7,
+      "category": "Database",
+      "task": "Verify chatMessages.sources column can store full content (check if TEXT/JSONB is sufficient)",
+      "file": "src/db/schema.ts",
+      "done": true,
+      "notes": "Verified: sources column uses JSONB type which can handle large JSON payloads"
+    },
+    {
+      "id": 8,
+      "category": "Bug",
+      "task": "Replace custom getOrCreateCollection with ChromaDB's native getOrCreateCollection method",
+      "file": "src/lib/chroma.ts",
+      "done": true,
+      "priority": "high",
+      "issue": "Previously uploaded PDFs not being retrieved in new sessions - RAG returns empty results",
+      "analysis": "Current implementation uses try/catch: getCollection throws → createCollection. If getCollection fails for ANY reason (network timeout, transient error), createCollection is called but FAILS because collection already exists. This breaks retrieval completely. ChromaDB's native getOrCreateCollection uses atomic 'get_or_create: true' flag which handles this correctly.",
+      "solution": "Use chromaClient.getOrCreateCollection({ name, metadata }) instead of manual try/catch pattern"
+    }
+  ]
+}
