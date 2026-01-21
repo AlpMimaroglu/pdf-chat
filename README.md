@@ -87,6 +87,9 @@ npm run dev
 ```bash
 export OPENAI_API_KEY=your-key
 export JWT_SECRET=your-secret-min-32-characters-long
+
+echo "OPENAI_API_KEY=$OPENAI_API_KEY" > .env
+echo "JWT_SECRET=$JWT_SECRET" >> .env
 ```
 
 2. Build and run all services:
